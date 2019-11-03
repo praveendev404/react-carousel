@@ -2,8 +2,9 @@ import { put, all, takeLatest } from "redux-saga/effects";
 
 import { TaskConstants } from "../constants";
 
-function* updateName(model) {
-  yield put({ type: TaskConstants.UPDATE_NAME_START, result: {} });
+function* updateName(actiion) {
+  debugger;
+  yield put({ type: TaskConstants.UPDATE_NAME_START, model: actiion.model });
 }
 
 function* updateNameWatcher() {

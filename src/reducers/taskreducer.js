@@ -5,7 +5,7 @@ const initialState = {
       id: 1,
       url:
         "https://cmeimg-a.akamaihd.net/640/clsd/getty/c64f76dc20c246ca88ee180fe4b4b781",
-      name: "Hello"
+      name: ""
     },
     {
       id: 2,
@@ -36,8 +36,15 @@ const initialState = {
 
 export function TaskReducer(state = initialState, action) {
   switch (action.type) {
-    case TaskConstants.UPDATE_NAME:
+    case TaskConstants.UPDATE_NAME_START:
+      debugger;
+      const imageArray = state.imageData.forEach(o => {
+        if (o.id === action.model.id) {
+          o.name = action.model.name;
+        }
+      });
       return {
+        ...state,
         loading: true
       };
 

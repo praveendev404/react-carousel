@@ -16,7 +16,8 @@ class Carousel extends React.Component {
 
     this.state = {
       currentImageIndex: 0,
-      open: false
+      open: false,
+      name: ""
     };
   }
 
@@ -58,6 +59,14 @@ class Carousel extends React.Component {
     this.setState({
       open: false
     });
+    debugger;
+    this.props.updateNameAction({ id: e, name: this.state.name });
+  };
+  handleChange = e => {
+    this.setState({
+      ...this.state,
+      name: e.target.value
+    });
   };
   render() {
     const { imageData } = this.props;
@@ -72,7 +81,7 @@ class Carousel extends React.Component {
 
         <div className={`image-slide `}>
           <div className="image-container">
-            <img src={item.url}></img>
+            <img src={item.url} style={{ width: "500px" }}></img>
             <div className="image-label">{item.name}</div>
           </div>
         </div>
@@ -102,6 +111,8 @@ class Carousel extends React.Component {
               label="Outlined"
               margin="normal"
               variant="outlined"
+              value={this.state.name}
+              onChange={this.handleChange}
             />
           </DialogContent>
           <DialogActions>

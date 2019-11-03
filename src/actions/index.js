@@ -1,8 +1,8 @@
 import { TaskConstants } from "../constants";
 
-const updateNameAction = id => ({
+const updateNameAction = model => ({
   type: TaskConstants.UPDATE_NAME,
-  id: id
+  model: model
 });
 
 export { updateNameAction };
