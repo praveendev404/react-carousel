@@ -9,7 +9,8 @@ body,
 
 .image-slide {
   height: 100%;
-  width: 100%;
+  width: 500px;
+  text-align: center;
   transition: background-image 0.3s ease-in-out;
 }
 
@@ -27,4 +28,15 @@ body,
 
 .slide-arrow.left {
   left: 1rem;
+}
+
+.image-container {
+  position: relative;
+}
+.image-label {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  font-size: 20px;
+  background-color: #fff;
 }

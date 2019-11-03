@@ -1,26 +1,28 @@
 import React from "react";
-const imgUrls = [
-  "https://cmeimg-a.akamaihd.net/640/clsd/getty/c64f76dc20c246ca88ee180fe4b4b781",
-  "https://lh3.googleusercontent.com/oxPeODS2m6rYIVbhcQChRtOWEYeGDwbeeeB1cDU2o_WYAVPU61VIgx-_6BAh5gSL8Sw=h900",
-  "https://i0.wp.com/www.universodegatos.com/wp-content/uploads/2017/04/fivfelv7.jpg?resize=582%2C328",
-  "https://i.pinimg.com/736x/07/c3/45/07c345d0eca11d0bc97c894751ba1b46.jpg",
-  "https://ehealthforum.com/health/images/avatars/11699147425707699031013.jpeg"
-];
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
+import { updateNameAction } from "./actions";
+import Button from "@material-ui/core/Button";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import TextField from "@material-ui/core/TextField";
 
-export class Carousel extends React.Component {
+class Carousel extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      currentImageIndex: 0
+      currentImageIndex: 0,
+      open: false
     };
-
-    this.nextSlide = this.nextSlide.bind(this);
-    this.previousSlide = this.previousSlide.bind(this);
   }
 
-  previousSlide() {
-    const lastIndex = imgUrls.length - 1;
+  previousSlide = e => {
+    const { imageData } = this.props;
+    const lastIndex = imageData.length - 1;
     const { currentImageIndex } = this.state;
     const shouldResetIndex = currentImageIndex === 0;
     const index = shouldResetIndex ? lastIndex : currentImageIndex - 1;
@@ -28,10 +30,11 @@ export class Carousel extends React.Component {
     this.setState({
       currentImageIndex: index
     });
-  }
+  };
 
-  nextSlide() {
-    const lastIndex = imgUrls.length - 1;
+  nextSlide = e => {
+    const { imageData } = this.props;
+    const lastIndex = imageData.length - 1;
     const { currentImageIndex } = this.state;
     const shouldResetIndex = currentImageIndex === lastIndex;
     const index = shouldResetIndex ? 0 : currentImageIndex + 1;
@@ -39,9 +42,26 @@ export class Carousel extends React.Component {
     this.setState({
       currentImageIndex: index
     });
-  }
+  };
+  handleClickOpen = () => {
+    this.setState({
+      open: true
+    });
+  };
 
+  handleClose = () => {
+    this.setState({
+      open: false
+    });
+  };
+  handleTag = e => {
+    this.setState({
+      open: false
+    });
+  };
   render() {
+    const { imageData } = this.props;
+    const item = imageData[this.state.currentImageIndex];
     return (
       <div className="carousel">
         <Arrow
@@ -49,12 +69,54 @@ export class Carousel extends React.Component {
           clickFunction={this.previousSlide}
           glyph="&#9664;"
         />
-        <ImageSlide url={imgUrls[this.state.currentImageIndex]} />
+
+        <div className={`image-slide `}>
+          <div className="image-container">
+            <img src={item.url}></img>
+            <div className="image-label">{item.name}</div>
+          </div>
+        </div>
+        <Button
+          variant="outlined"
+          color="primary"
+          onClick={this.handleClickOpen}
+        >
+          Tag Name
+        </Button>
+
         <Arrow
           direction="right"
           clickFunction={this.nextSlide}
           glyph="&#9654;"
         />
+        <Dialog
+          open={this.state.open}
+          onClose={this.handleClose}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">{"Tag Name"}</DialogTitle>
+          <DialogContent>
+            <TextField
+              id="outlined-basic"
+              label="Outlined"
+              margin="normal"
+              variant="outlined"
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={this.handleClose} color="primary">
+              Close
+            </Button>
+            <Button
+              onClick={() => this.handleTag(item.id)}
+              color="primary"
+              autoFocus
+            >
+              Tag
+            </Button>
+          </DialogActions>
+        </Dialog>
       </div>
     );
   }
@@ -66,10 +128,23 @@ const Arrow = ({ direction, clickFunction, glyph }) => (
   </div>
 );
 
-const ImageSlide = ({ url }) => {
-  return (
-    <div className="image-slide">
-      <img src={url} />
-    </div>
+const mapDispatchtoProps = dispatch =>
+  bindActionCreators(
+    {
+      updateNameAction: updateNameAction
+    },
+    dispatch
   );
+
+const mapStateToProps = state => {
+  const { imageData } = state;
+  return {
+    imageData
+  };
 };
+
+const imageCarousel = connect(
+  mapStateToProps,
+  mapDispatchtoProps
+)(Carousel);
+export { imageCarousel as Carousel };
